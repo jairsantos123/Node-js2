@@ -1,67 +1,44 @@
-import http from 'node:http'
+import http from 'node:http';
 
-const users = []
+const users = [];
 
 const server = http.createServer((req, res) => {
-    const {method, url} = req
+    const {method, url} = req;
+
     if (method === 'GET' && url === '/users') {
-        return res
-        .sensitiveHeaders('content-type', 'aplication/json')
-        .end(JSON.stringify(users))
-
-    }
-
-    if (method === 'GET' && url === '/produtos') {
-        return res
-        .sensitiveHeaders('content-type', 'aplication/json')
-        .end(JSON.stringify(produtos))
-
+        if (users.length === 0) {
+            return res.end('Nenhum usuário encontrado.');
+        }
+        return res.end(JSON.stringify(users));
     }
 
     if (method === 'POST' && url === '/users') {
         users.push({
             id: 1,
-            name: 'Jairo Rocha',
-            email: 'jairabvl@hotmail.com'
-        })
-
-        return res.end('Criação de Usuario')
-        
+            name: 'JAIRO'
+        });
+        return res.end('Usuário criado com sucesso.');
     }
 
-    if (method === 'POST' && url === '/produtos') {
-        users.push({
-            
-            "id": 1,
-            "produto":"mouse",
-        
-        },
-        {
-            "id": 2,
-            "produto":"smartphone",
-        },
-        {
-            "id": 3,
-            "produto":"bike",
-
-        },
-        {
-            "id": 4,
-            "produto":"bola",
-        
-        },
-
-
-            
-        )
-
-        return res.end('Criação de Usuario')
-        
+    if (method === 'GET' && url === '/produtos') {
+        if (users.length === 0) {
+            return res.end('Nenhum produto encontrado.');
+        } else {
+            return res.end(JSON.stringify(users));
+        }
     }
 
-    
-    return res.end('/produtos')
+    if (method === 'PATCH' && url === '/produtos') {
+        if (users.length !== 0) {
+            users[0].produto = 'Produto 1';
+            
+            return res.end('Atualização de usuário efetuada.');
+        } else {
+            return res.end('Nenhum produto encontrado.');
+        }
+    }
 
-})
+    return res.end('Página inicial.');
+});
 
-server.listen(3000)
+server.listen(3000);
